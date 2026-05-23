@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 
 export default function NavBar() {
   const pathname = usePathname();
@@ -20,31 +21,24 @@ export default function NavBar() {
 
   const navLinks = [
     { name: "Home", path: "/" },
-    { name: "All Appointments", path: "/appointments" },
+    { name: "All Appointments", path: "/all-appointments" },
     { name: "Dashboard", path: "/dashboard" },
   ];
 
   return (
     <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur-md">
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
-
-        {/* Logo */}
-        <Link href={"/"} className="flex items-center gap-3">
+        <Link href="/" className="flex items-center gap-3">
           <div className="flex h-11 w-11 items-center justify-center rounded-full bg-sky-500 text-xl font-bold text-white shadow-md">
             +
           </div>
 
           <div>
-            <h1 className="text-xl font-bold text-slate-800">
-              DocAppoint
-            </h1>
-            <p className="text-xs text-slate-500">
-              Smart Healthcare
-            </p>
+            <h1 className="text-xl font-bold text-slate-800">DocAppoint</h1>
+            <p className="text-xs text-slate-500">Smart Healthcare</p>
           </div>
         </Link>
 
-        {/* Desktop Menu */}
         <ul className="hidden items-center gap-8 lg:flex">
           {navLinks.map((link) => (
             <li key={link.path}>
@@ -57,7 +51,6 @@ export default function NavBar() {
                 }`}
               >
                 {link.name}
-
                 {pathname === link.path && (
                   <span className="absolute -bottom-1 left-0 h-[2px] w-full bg-sky-500"></span>
                 )}
@@ -66,20 +59,19 @@ export default function NavBar() {
           ))}
         </ul>
 
-        {/* Right Side */}
         <div className="hidden items-center gap-4 lg:flex">
           {!user ? (
             <>
               <Link
-                href="/login"
-                className="rounded-full border px-5 py-2 font-medium text-slate-700 transition hover:bg-slate-100"
+                href={"/login"}
+                className="rounded-full border px-5 py-2 font-medium text-slate-700 hover:bg-slate-100"
               >
                 Login
               </Link>
 
               <Link
-                href="/register"
-                className="rounded-full bg-sky-500 px-5 py-2 font-medium text-white transition hover:bg-sky-600"
+                href={"/register"}
+                className="rounded-full bg-sky-500 px-5 py-2 font-medium text-white hover:bg-sky-600"
               >
                 Register
               </Link>
@@ -96,7 +88,7 @@ export default function NavBar() {
 
               <button
                 onClick={handleLogOut}
-                className="rounded-full border border-red-200 px-5 py-2 font-medium text-red-500 transition hover:bg-red-50"
+                className="rounded-full border border-red-200 px-5 py-2 font-medium text-red-500 hover:bg-red-50"
               >
                 Logout
               </button>
@@ -104,27 +96,20 @@ export default function NavBar() {
           )}
         </div>
 
-        {/* Mobile Button */}
         <button
           onClick={() => setMenuOpen(!menuOpen)}
-          className="flex flex-col gap-1 lg:hidden"
+          className="lg:hidden text-3xl text-slate-700"
         >
-          <span className="h-[3px] w-6 rounded bg-slate-700"></span>
-          <span className="h-[3px] w-6 rounded bg-slate-700"></span>
-          <span className="h-[3px] w-6 rounded bg-slate-700"></span>
+          {menuOpen ? <HiOutlineX /> : <HiOutlineMenu />}
         </button>
       </nav>
 
-      {/* Mobile Menu */}
       <div
         className={`overflow-hidden transition-all duration-300 lg:hidden ${
-          menuOpen
-            ? "max-h-[500px] border-t opacity-100"
-            : "max-h-0 opacity-0"
+          menuOpen ? "max-h-[500px] border-t opacity-100" : "max-h-0 opacity-0"
         }`}
       >
-        <div className="space-y-4 px-4 py-6 bg-white">
-
+        <div className="space-y-4 bg-white px-4 py-6">
           {navLinks.map((link) => (
             <Link
               key={link.path}
@@ -172,9 +157,7 @@ export default function NavBar() {
                     <h3 className="font-semibold text-slate-800">
                       {user.name}
                     </h3>
-                    <p className="text-sm text-slate-500">
-                      Logged In
-                    </p>
+                    <p className="text-sm text-slate-500">Logged In</p>
                   </div>
                 </div>
 
@@ -187,7 +170,6 @@ export default function NavBar() {
               </div>
             )}
           </div>
-
         </div>
       </div>
     </header>
