@@ -16,7 +16,7 @@ export default function NavBar() {
 
     const { data: session } = authClient.useSession();
 
-    console.log(session);
+    // console.log(session);
 
     const user = session?.user;
 

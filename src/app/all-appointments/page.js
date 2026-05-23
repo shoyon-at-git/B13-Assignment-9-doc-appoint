@@ -52,7 +52,7 @@ export default function AllDoctorsPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           {doctors.map((doctor) => (
             <div
-              key={doctor._id || doctor.id}
+              key={doctor._id}
               className="hover:-translate-y-1 transition duration-300"
             >
               <DoctorCard doctor={doctor} />

@@ -4,7 +4,7 @@ import Link from "next/link";
 export default function DoctorCard({ doctor }) {
   return (
     <div className="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
-      <div className="relative w-full h-52">
+      <div className="relative w-full h-100">
         <Image
           src={doctor.image}
           alt={doctor.name}
