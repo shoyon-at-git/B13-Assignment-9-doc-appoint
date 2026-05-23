@@ -103,12 +103,12 @@ const page = () => {
                         </Button>
         
                         <p className="mt-6 text-center text-sm">
-                            Already have an account?{" "}
+                            Don't have an account?{" "}
                             <Link
-                                href="/login"
+                                href="/register"
                                 className="font-semibold text-blue-600 hover:underline"
                             >
-                                Login
+                                Register
                             </Link>
                         </p>
                     </div>
