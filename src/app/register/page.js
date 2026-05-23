@@ -13,10 +13,11 @@ import {
 import { FaGoogle } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 
 const RegisterPage = () => {
     const [error, setError] = useState("");
+    const router = useRouter();
 
     const handleRegister = async (e) => {
         e.preventDefault();
@@ -25,24 +26,22 @@ const RegisterPage = () => {
         const formData = new FormData(e.currentTarget);
 
         const user = Object.fromEntries(formData.entries());
-        // console.log(user);
-        const { data, error: signUpError } = await authClient.signUp.email({
-                email: user.email,
-                name: user.name,
-                photo: user.photo,
-                password: user.password,
-            });
-        // console.log({data,signUpError}, "data");
-        if (signUpError) {
-            const msg = signUpError.message;
-            // setError(msg);
-            toast.error(msg);
-            return;
-        }
 
-        toast.success("Account created successfully 🚀");
-        redirect("/login")
-        // console.log("User:", data);
+        console.log(user);
+
+        const{data, error:signUpError} = await authClient.signUp.email({
+            email:user.email,
+            name:user.name,
+            image:user.image || undefined,
+            password:user.password,
+        })
+        console.log({data,signUpError});
+        if(data){
+            redirect("/login")
+        }
+        if(signUpError){
+            toast.error(signUpError.message)
+        }
     };
 
     const handleSocialSignup = async () => {
@@ -56,7 +55,10 @@ const RegisterPage = () => {
                     Create new account
                 </h1>
 
-                <Form onSubmit={handleRegister} className="flex flex-col gap-5">
+                <Form
+                    onSubmit={handleRegister}
+                    className="flex flex-col gap-5"
+                >
                     <TextField isRequired name="name">
                         <Label>Name</Label>
                         <Input placeholder="Enter your name" />
@@ -74,16 +76,20 @@ const RegisterPage = () => {
                             ) {
                                 return "Please enter a valid email";
                             }
+
                             return null;
                         }}
                     >
                         <Label>Email</Label>
+
                         <Input placeholder="john@example.com" />
+
                         <FieldError />
                     </TextField>
 
-                    <TextField name="photo" type="url">
+                    <TextField name="image" type="url">
                         <Label>Photo URL</Label>
+
                         <Input placeholder="https://example.com/photo.jpg" />
                     </TextField>
 
@@ -95,17 +101,22 @@ const RegisterPage = () => {
                             if (!value || value.length < 6) {
                                 return "Password must be at least 6 characters";
                             }
+
                             if (!/[A-Z]/.test(value)) {
                                 return "Must contain at least 1 uppercase letter";
                             }
+
                             if (!/[a-z]/.test(value)) {
                                 return "Must contain at least 1 lowercase letter";
                             }
+
                             return null;
                         }}
                     >
                         <Label>Password</Label>
+
                         <Input placeholder="Enter your password" />
+
                         <FieldError />
                     </TextField>
 
@@ -125,15 +136,18 @@ const RegisterPage = () => {
 
                 <div className="my-6 flex items-center gap-3">
                     <div className="h-px flex-1 bg-gray-300"></div>
+
                     <p className="text-sm text-gray-500">OR</p>
+
                     <div className="h-px flex-1 bg-gray-300"></div>
                 </div>
 
                 <Button
                     onClick={handleSocialSignup}
-                    className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-3 font-medium text-gray-800 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0 border border-gray-200"
+                    className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white py-3 font-medium text-gray-800 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl active:translate-y-0"
                 >
                     <FaGoogle className="text-xl text-red-500" />
+
                     <span>Continue with Google</span>
                 </Button>
 

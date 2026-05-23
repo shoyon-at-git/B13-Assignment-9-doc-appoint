@@ -13,33 +13,38 @@ import {
 import { FaGoogle } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
-import { redirect, useRouter } from "next/navigation";
+import { redirect } from "next/navigation";
 
 const Page = () => {
-    const router = useRouter();
+
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
         e.preventDefault();
+
         setLoading(true);
 
         const formData = new FormData(e.currentTarget);
+
         const user = Object.fromEntries(formData.entries());
 
-        console.log(user);
+        // console.log(user);
+        const { data, error: signInError } =
+            await authClient.signIn.email({
+                email: user.email,
+                password: user.password,
+            });
 
-        const {data, error: signInError} = await authClient.signIn.email({
-            email: user.email,
-            password:user.password,
-        })
-        console.log({data,signInError})
-        if(signInError){
-            const msg = signInError.message;
-            toast.error(msg);
-            return
-        }
-        toast.success('logIn Successful')
-        redirect("/");
+            console.log({ data, signInError });
+
+            if(data){
+                redirect("/")
+            }
+
+            if (signInError) {
+                toast.error(signInError.message);
+                return;
+            }
     };
 
     const handleSocialSignup = async () => {
@@ -66,10 +71,14 @@ const Page = () => {
                             ) {
                                 return "Please enter a valid email";
                             }
+
+                            return null;
                         }}
                     >
                         <Label>Email</Label>
+
                         <Input placeholder="john@example.com" />
+
                         <FieldError />
                     </TextField>
 
@@ -78,16 +87,25 @@ const Page = () => {
                         name="password"
                         type="password"
                         validate={(value) => {
-                            if (!value || value.length < 6)
+                            if (!value || value.length < 6) {
                                 return "Min 6 characters";
-                            if (!/[A-Z]/.test(value))
+                            }
+
+                            if (!/[A-Z]/.test(value)) {
                                 return "Need uppercase letter";
-                            if (!/[a-z]/.test(value))
+                            }
+
+                            if (!/[a-z]/.test(value)) {
                                 return "Need lowercase letter";
+                            }
+
+                            return null;
                         }}
                     >
                         <Label>Password</Label>
+
                         <Input placeholder="Enter your password" />
+
                         <FieldError />
                     </TextField>
 
@@ -102,15 +120,18 @@ const Page = () => {
 
                 <div className="my-6 flex items-center gap-3">
                     <div className="h-px flex-1 bg-gray-300"></div>
+
                     <p className="text-sm text-gray-500">OR</p>
+
                     <div className="h-px flex-1 bg-gray-300"></div>
                 </div>
 
                 <Button
                     onClick={handleSocialSignup}
-                    className="flex w-full items-center justify-center gap-3 rounded-xl bg-white py-3 font-medium text-gray-800 shadow-md border border-gray-200"
+                    className="flex w-full items-center justify-center gap-3 rounded-xl border border-gray-200 bg-white py-3 font-medium text-gray-800 shadow-md transition-all duration-300 hover:-translate-y-0.5 hover:shadow-xl"
                 >
                     <FaGoogle className="text-xl text-red-500" />
+
                     <span>Continue with Google</span>
                 </Button>
 
