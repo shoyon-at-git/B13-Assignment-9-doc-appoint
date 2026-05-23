@@ -11,6 +11,8 @@ import {
     TextField,
 } from "@heroui/react";
 import { FaGoogle } from "react-icons/fa";
+import { authClient } from "@/lib/auth-client";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
     const [error, setError] = useState("");
@@ -22,7 +24,24 @@ const RegisterPage = () => {
         const formData = new FormData(e.currentTarget);
 
         const user = Object.fromEntries(formData.entries());
-        console.log(user);
+        // console.log(user);
+        const { data, error: signUpError } = await authClient.signUp.email({
+                email: user.email,
+                name: user.name,
+                photo: user.photo,
+                password: user.password,
+            });
+        // console.log({data,signUpError}, "data");
+        if (signUpError) {
+            const msg = signUpError.message;
+            // setError(msg);
+            toast.error(msg);
+            return;
+        }
+
+        toast.success("Account created successfully 🚀");
+        console.log("User:", data);
+
     };
 
     const handleSocialSignup = async () => {
