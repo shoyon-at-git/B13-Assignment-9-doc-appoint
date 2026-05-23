@@ -13,6 +13,7 @@ import {
 import { FaGoogle } from "react-icons/fa";
 import { authClient } from "@/lib/auth-client";
 import { toast } from "react-toastify";
+import { redirect } from "next/navigation";
 
 const RegisterPage = () => {
     const [error, setError] = useState("");
@@ -40,8 +41,8 @@ const RegisterPage = () => {
         }
 
         toast.success("Account created successfully 🚀");
-        console.log("User:", data);
-
+        redirect("/login")
+        // console.log("User:", data);
     };
 
     const handleSocialSignup = async () => {
