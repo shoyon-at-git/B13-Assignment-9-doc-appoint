@@ -29,23 +29,26 @@ const RegisterPage = () => {
 
         console.log(user);
 
-        const{data, error:signUpError} = await authClient.signUp.email({
-            email:user.email,
-            name:user.name,
-            image:user.image || undefined,
-            password:user.password,
+        const { data, error: signUpError } = await authClient.signUp.email({
+            email: user.email,
+            name: user.name,
+            image: user.image || undefined,
+            password: user.password,
         })
-        console.log({data,signUpError});
-        if(data){
+        console.log({ data, signUpError });
+        if (data) {
             redirect("/login")
         }
-        if(signUpError){
+        if (signUpError) {
             toast.error(signUpError.message)
         }
     };
 
     const handleSocialSignup = async () => {
-        
+        await authClient.signIn.social({
+            provider: "google",
+            callbackURL: "/",
+        })
     };
 
     return (

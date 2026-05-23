@@ -103,10 +103,8 @@ export default function NavBar() {
                         <>
                             <div className="flex items-center gap-3 rounded-full bg-slate-100 px-3 py-2">
                                 <Image
-                                    src={
-                                        user.image ||
-                                        "/default-user.png"
-                                    }
+                                    src={user.image}
+                                    referrerPolicy="no-referrer"
                                     width={48}
                                     height={48}
                                     alt="user"
