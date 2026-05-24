@@ -7,6 +7,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
 import { HiOutlineMenu, HiOutlineX } from "react-icons/hi";
 import { toast } from "react-toastify";
+import { FaUserMd} from "react-icons/fa";
 
 export default function NavBar() {
     const pathname = usePathname();
@@ -47,7 +48,7 @@ export default function NavBar() {
             <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 lg:px-8">
                 <Link href="/" className="flex items-center gap-3">
                     <div className="flex h-11 w-11 items-center justify-center rounded-full bg-sky-500 text-xl font-bold text-white shadow-md">
-                        +
+                        <FaUserMd></FaUserMd>
                     </div>
 
                     <div>

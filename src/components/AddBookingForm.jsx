@@ -38,7 +38,7 @@ const AddBookingForm = ({doctor}) => {
     const data = await res.json();
 
     // console.log(data);
-    toast.success('Booking Added Successfully');
+    toast.success('“Appointment booked successfully!”');
     }
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 py-12 px-4">
