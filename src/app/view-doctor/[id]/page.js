@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import React from "react";
 import {
     FaHospital,
@@ -205,9 +206,11 @@ const DoctorDetailsPage = async ({ params }) => {
                             </div>
 
                             {/* Button */}
-                            <button className="w-full mt-10 bg-gradient-to-r from-blue-600 to-cyan-500 hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 text-white py-4 rounded-2xl text-lg font-bold">
+                            <Link href={`/book-doctor/${doctor._id}`}>
+                            <button className="w-full mt-10 cursor-pointer bg-gradient-to-r from-blue-600 to-cyan-500 hover:scale-[1.02] hover:shadow-2xl transition-all duration-300 text-white py-4 rounded-2xl text-lg font-bold">
                                 Book Appointment
                             </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
