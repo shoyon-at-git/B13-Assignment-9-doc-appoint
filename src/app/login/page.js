@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import Link from "next/link";
 import {
@@ -16,7 +16,7 @@ import { toast } from "react-toastify";
 import { redirect } from "next/navigation";
 
 const Page = () => {
-
+    const router = useRouter();
     const [loading, setLoading] = useState(false);
 
     const handleLogin = async (e) => {
@@ -38,8 +38,8 @@ const Page = () => {
             console.log({ data, signInError });
 
             if(data){
-                redirect("/");
                 toast.success("Log in successful");
+                router.push("/");
             }
 
             if (signInError) {
@@ -52,8 +52,7 @@ const Page = () => {
         await authClient.signIn.social({
             provider:"google",
             callbackURL: "/",
-        })
-        toast.success("Logged in");
+        });
     };
 
     return (

@@ -98,14 +98,14 @@ export default function Hero() {
                     <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
 
                       <Link
-                        href="/appointments"
+                        href="/all-appointments"
                         className="rounded-full bg-sky-500 px-5 py-2.5 text-center text-xs font-semibold text-white transition hover:bg-sky-600 sm:px-7 sm:py-3 sm:text-base"
                       >
-                        Book Appointment
+                        See Appointments
                       </Link>
 
                       <Link
-                        href="/doctors"
+                        href="/all-doctors"
                         className="rounded-full border border-white/40 px-5 py-2.5 text-center text-xs font-semibold text-white backdrop-blur transition hover:bg-white/10 sm:px-7 sm:py-3 sm:text-base"
                       >
                         Explore Doctors

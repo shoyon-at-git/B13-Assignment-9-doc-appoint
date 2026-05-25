@@ -60,7 +60,7 @@ export default function TopDoctors() {
       </div>
 
       <div className="flex justify-center mt-14">
-        <Link href="/all-appointments">
+        <Link href="/all-doctors">
           <button className="relative overflow-hidden cursor-pointer px-10 py-3 rounded-full text-white font-semibold bg-gradient-to-r from-blue-600 via-cyan-500 to-blue-600 shadow-lg hover:shadow-xl transition-all duration-300 group">
             <span className="relative z-10">See More Doctors →</span>
             <span className="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition"></span>

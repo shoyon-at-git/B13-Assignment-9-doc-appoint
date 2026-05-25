@@ -37,8 +37,8 @@ const RegisterPage = () => {
         })
         console.log({ data, signUpError });
         if (data) {
-            redirect("/login")
             toast.success("Account registration successful");
+            router.push("/login")
         }
         if (signUpError) {
             toast.error(signUpError.message)
@@ -50,7 +50,6 @@ const RegisterPage = () => {
             provider: "google",
             callbackURL: "/",
         })
-        toast.success('Logged in');
     };
 
     return (

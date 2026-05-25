@@ -1,79 +1,119 @@
 "use client";
 
+import AllDoctorsPage from "@/components/AllDoctors";
 import { useEffect, useState } from "react";
-import Link from "next/link";
-import DoctorCard from "@/components/DoctorCard";
 
-export default function AllDoctorsPage() {
-  const [doctors, setDoctors] = useState([]);
-  const [loading, setLoading] = useState(true);
+export default function AppointmentsPage() {
+    const [appointments, setAppointments] = useState([]);
+    const [search, setSearch] = useState("");
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchDoctors = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/doctors");
-        const data = await res.json();
-        setDoctors(data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+    useEffect(() => {
+        const fetchAppointments = async () => {
+            try {
+                const res = await fetch("http://localhost:4000/appointments");
+                const data = await res.json();
+                setAppointments(data);
+            } catch (err) {
+                console.log(err);
+            } finally {
+                setLoading(false);
+            }
+        };
 
-    fetchDoctors();
-  }, []);
+        fetchAppointments();
+    }, []);
 
-  if (loading) {
-    return (
-      <div className="w-11/12 mx-auto py-20 flex flex-col items-center gap-3">
-        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-        <p className="text-gray-500 text-sm">Loading doctors...</p>
-      </div>
+    const filteredAppointments = appointments.filter((app) =>
+        app.doctorName?.toLowerCase().includes(search.toLowerCase())
     );
-  }
 
-  return (
-    <section className="w-11/12 mx-auto py-14">
-      <div className="text-center mb-10">
-        <h1 className="text-4xl font-bold text-gray-800">
-          All Doctors
-        </h1>
-        <p className="text-gray-500 mt-2">
-          Browse all available specialists and book your appointment
-        </p>
-      </div>
-
-      {doctors.length === 0 ? (
-        <div className="text-center text-gray-500 py-20">
-          No doctors available 😶
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {doctors.map((doctor) => (
-            <div
-              key={doctor._id}
-              className="hover:-translate-y-1 transition duration-300"
-            >
-              <DoctorCard doctor={doctor} />
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center min-h-screen">
+                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
             </div>
-          ))}
+        );
+    }
+
+    return (
+        <div>
+            <section className="w-11/12 mx-auto py-12">
+
+                {/* Header */}
+                <h1 className="text-3xl font-bold text-center mb-8">
+                    All Appointments
+                </h1>
+
+                {/* 🔎 Search Box */}
+                <div className="flex justify-center mb-10">
+                    <input
+                        type="text"
+                        placeholder="Search by doctor name..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                        className="w-full max-w-md px-5 py-3 border rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+                </div>
+
+                {/* Results */}
+                {filteredAppointments.length === 0 ? (
+                    <p className="text-center text-gray-500">
+                        No appointments found 😶
+                    </p>
+                ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {filteredAppointments.map((app) => (
+                            <div
+                                key={app._id}
+                                className="border rounded-xl p-5 shadow-sm hover:shadow-md transition"
+                            >
+                                {/* Doctor */}
+                                <h2 className="text-xl font-semibold text-blue-600">
+                                    {app.doctorName}
+                                </h2>
+
+                                {/* Patient */}
+                                <p className="text-gray-600 mt-2">
+                                    👤 Patient: {app.patientName}
+                                </p>
+
+                                {/* Gender */}
+                                <p className="text-gray-600">
+                                    ⚧ Gender: {app.gender}
+                                </p>
+
+                                {/* Contact */}
+                                <p className="text-gray-600">
+                                    📞 {app.phone}
+                                </p>
+
+                                {/* Date & Time */}
+                                <p className="text-gray-600">
+                                    📅 {app.appointmentDate}
+                                </p>
+
+                                <p className="text-gray-600">
+                                    ⏰ {app.appointmentTime}
+                                </p>
+
+                                {/* Symptoms */}
+                                <p className="text-gray-600">
+                                    🧾 Symptoms: {app.symptoms}
+                                </p>
+
+                                {/* Email */}
+                                <p className="text-gray-400 text-sm mt-2">
+                                    {app.userEmail}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                )}
+            </section>
+            <section>
+                <AllDoctorsPage></AllDoctorsPage>
+            </section>
         </div>
-      )}
-
-      <div className="flex justify-center mt-14 gap-4">
-        <Link href="/">
-          <button className="px-6 py-2 rounded-full border border-gray-300 text-gray-700 hover:bg-gray-100 transition cursor-pointer">
-            Back Home
-          </button>
-        </Link>
-
-        <Link href="/my-bookings">
-          <button className="px-6 py-2 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition cursor-pointer">
-            See your Bookings
-          </button>
-        </Link>
-      </div>
-    </section>
-  );
+    );
 }
