@@ -20,7 +20,7 @@ export default function MyProfilePage() {
         authClient.useSession();
 
     const user = session?.user;
-    console.log(user);
+    // console.log(user);
 
     const [profile, setProfile] =
         useState(null);

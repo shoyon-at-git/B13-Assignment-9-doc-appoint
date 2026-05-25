@@ -333,7 +333,7 @@ export default function NavBar() {
                         </h2>
 
                         <p className="text-sm text-slate-500">
-                            Welcome back 👋
+                            Navigate to your bookings and profile 👋
                         </p>
                     </div>
 

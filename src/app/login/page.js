@@ -38,7 +38,8 @@ const Page = () => {
             console.log({ data, signInError });
 
             if(data){
-                redirect("/")
+                redirect("/");
+                toast.success("Log in successful");
             }
 
             if (signInError) {
@@ -52,6 +53,7 @@ const Page = () => {
             provider:"google",
             callbackURL: "/",
         })
+        toast.success("Logged in");
     };
 
     return (

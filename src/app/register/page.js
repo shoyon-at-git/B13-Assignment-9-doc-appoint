@@ -27,7 +27,7 @@ const RegisterPage = () => {
 
         const user = Object.fromEntries(formData.entries());
 
-        console.log(user);
+        // console.log(user);
 
         const { data, error: signUpError } = await authClient.signUp.email({
             email: user.email,
@@ -38,6 +38,7 @@ const RegisterPage = () => {
         console.log({ data, signUpError });
         if (data) {
             redirect("/login")
+            toast.success("Account registration successful");
         }
         if (signUpError) {
             toast.error(signUpError.message)
@@ -49,6 +50,7 @@ const RegisterPage = () => {
             provider: "google",
             callbackURL: "/",
         })
+        toast.success('Logged in');
     };
 
     return (
