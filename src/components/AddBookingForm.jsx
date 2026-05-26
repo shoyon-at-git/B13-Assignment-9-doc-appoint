@@ -1,7 +1,8 @@
-'use client'
-import { authClient } from '@/lib/auth-client';
-import { redirect } from 'next/navigation';
-import React from 'react';
+"use client";
+import { authClient } from "@/lib/auth-client";
+import { redirect } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
     FaUserMd,
     FaUser,
@@ -12,72 +13,80 @@ import {
     FaHospital,
     FaMoneyBillWave,
 } from "react-icons/fa";
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 
-const AddBookingForm = ({doctor}) => {
-    const {data:session}= authClient.useSession();
-    console.log(session?.user?.email);
-    const addBooking = async(e)=>{
+const AddBookingForm = ({ doctor }) => {
+    const { data: session } = authClient.useSession();
+    // console.log(session?.user?.email);
+    const [token, setToken] = useState(null);
+    const router = useRouter();
+
+    useEffect(() => {
+        const getToken = async () => {
+            const result = await authClient.token();
+
+            console.log(result);
+
+            setToken(result.data.token);
+        };
+
+        getToken();
+    }, []);
+    // console.log(token , "token");
+    const addBooking = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const patientInfo = Object.fromEntries(formData);
-        // console.log(patientInfo);
+        console.log(patientInfo);
         const bookingInfo = {
             ...patientInfo,
-            doctorName : doctor.name,
-            userEmail : session?.user?.email,
-        }
-        // console.log(bookingInfo);
+            doctorName: doctor.name,
+            userEmail: session?.user?.email,
+        };
+        console.log(bookingInfo, "booking");
         const res = await fetch("http://localhost:4000/add-booking", {
-        method: "POST",
-        headers: {
-            "content-type": "application/json",
-        },
-        body: JSON.stringify(bookingInfo),
-    });
+            method: "POST",
+            headers: {
+                "content-type": "application/json",
+                authorization: `Bearer ${token}`,
+            },
+            body: JSON.stringify(bookingInfo),
+        });
 
-    const data = await res.json();
+        const data = await res.json();
 
-    // console.log(data);
-    toast.success('“Appointment booked successfully!”');
-    redirect("/my-bookings");
-    }
+        console.log(data);
+        if (data.insertedId) {
+            toast.success("Appointment booked successfully!");
+
+            setTimeout(() => {
+                router.push("/my-bookings");
+            }, 1500);
+        }
+    };
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50 py-12 px-4">
-
             <div className="max-w-5xl mx-auto bg-white shadow-2xl rounded-3xl overflow-hidden">
                 <div className="bg-gradient-to-r from-blue-600 to-cyan-500 text-white p-8">
-
                     <h1 className="text-4xl font-bold flex items-center gap-4">
                         <FaUserMd />
                         Add Booking for {doctor.name}
                     </h1>
 
-                    <p className="mt-3 text-blue-100 text-lg">
-                        Complete the appointment form to confirm the booking.
-                    </p>
-
+                    <p className="mt-3 text-blue-100 text-lg">Complete the appointment form to confirm the booking.</p>
                 </div>
 
                 {/* Form Section */}
                 <div className="p-8 md:p-10">
-
                     <form onSubmit={addBooking} className="space-y-8">
-
                         {/* Doctor Information */}
                         <div>
-
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
-                                Doctor Information
-                            </h2>
+                            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Doctor Information</h2>
 
                             <div className="grid md:grid-cols-2 gap-6">
-
                                 {/* Doctor Name */}
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                                        Doctor Name
-                                    </label>
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">Doctor Name</label>
 
                                     <div className="relative">
                                         <FaUserMd className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" />
@@ -93,9 +102,7 @@ const AddBookingForm = ({doctor}) => {
 
                                 {/* Specialty */}
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                                        Specialty
-                                    </label>
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">Specialty</label>
 
                                     <div className="relative">
                                         <FaHospital className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" />
@@ -129,9 +136,7 @@ const AddBookingForm = ({doctor}) => {
 
                                 {/* Hospital */}
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                                        Hospital
-                                    </label>
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">Hospital</label>
 
                                     <div className="relative">
                                         <FaHospital className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" />
@@ -144,31 +149,24 @@ const AddBookingForm = ({doctor}) => {
                                         />
                                     </div>
                                 </div>
-
                             </div>
                         </div>
 
                         {/* Patient Information */}
                         <div>
-
-                            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">
-                                Patient Information
-                            </h2>
+                            <h2 className="text-2xl font-bold text-gray-800 mb-6 border-b pb-3">Patient Information</h2>
 
                             <div className="grid md:grid-cols-2 gap-6">
-
                                 {/* Patient Name */}
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                                        Patient Name
-                                    </label>
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">Patient Name</label>
 
                                     <div className="relative">
                                         <FaUser className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" />
 
                                         <input
                                             type="text"
-                                            name='patientName'
+                                            name="patientName"
                                             placeholder="Enter patient name"
                                             className="w-full border border-gray-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
@@ -177,15 +175,13 @@ const AddBookingForm = ({doctor}) => {
 
                                 {/* Gender */}
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                                        Gender
-                                    </label>
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">Gender</label>
 
                                     <div className="relative">
                                         <FaVenusMars className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" />
 
                                         <select
-                                            name='gender'
+                                            name="gender"
                                             defaultValue=""
                                             className="w-full border border-gray-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         >
@@ -199,16 +195,14 @@ const AddBookingForm = ({doctor}) => {
 
                                 {/* Phone */}
                                 <div>
-                                    <label className="text-sm font-medium text-gray-700 mb-2 block">
-                                        Phone Number
-                                    </label>
+                                    <label className="text-sm font-medium text-gray-700 mb-2 block">Phone Number</label>
 
                                     <div className="relative">
                                         <FaPhoneAlt className="absolute left-4 top-1/2 -translate-y-1/2 text-blue-500" />
 
                                         <input
                                             type="text"
-                                            name='phone'
+                                            name="phone"
                                             placeholder="01XXXXXXXXX"
                                             className="w-full border border-gray-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
@@ -226,7 +220,7 @@ const AddBookingForm = ({doctor}) => {
 
                                         <input
                                             type="date"
-                                            name='appointmentDate'
+                                            name="appointmentDate"
                                             className="w-full border border-gray-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
@@ -234,9 +228,7 @@ const AddBookingForm = ({doctor}) => {
 
                                 {/* Time */}
                                 <div>
-
                                     <div className="flex items-center justify-between mb-2">
-
                                         <label className="text-sm font-medium text-gray-700 block">
                                             Appointment Time
                                         </label>
@@ -244,7 +236,6 @@ const AddBookingForm = ({doctor}) => {
                                         <span className="text-xs bg-cyan-100 text-cyan-700 px-3 py-1 rounded-full font-medium">
                                             Available: {doctor.availability?.join(", ")}
                                         </span>
-
                                     </div>
 
                                     <div className="relative">
@@ -252,29 +243,24 @@ const AddBookingForm = ({doctor}) => {
 
                                         <input
                                             type="time"
-                                            name='appointmentTime'
+                                            name="appointmentTime"
                                             className="w-full border border-gray-300 rounded-xl py-3 pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                         />
                                     </div>
-
                                 </div>
-
                             </div>
 
                             {/* Symptoms */}
                             <div className="mt-6">
-                                <label className="text-sm font-medium text-gray-700 mb-2 block">
-                                    Symptoms / Notes
-                                </label>
+                                <label className="text-sm font-medium text-gray-700 mb-2 block">Symptoms / Notes</label>
 
                                 <textarea
                                     rows={5}
-                                    name='symptoms'
+                                    name="symptoms"
                                     placeholder="Describe symptoms..."
                                     className="w-full border border-gray-300 rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                                 />
                             </div>
-
                         </div>
 
                         {/* Button */}
@@ -284,13 +270,9 @@ const AddBookingForm = ({doctor}) => {
                         >
                             Confirm Booking
                         </button>
-
                     </form>
-
                 </div>
-
             </div>
-
         </div>
     );
 };

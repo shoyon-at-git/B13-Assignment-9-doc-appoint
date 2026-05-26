@@ -1,28 +1,54 @@
 "use client";
 
 import AllDoctorsPage from "@/components/AllDoctors";
+import { authClient } from "@/lib/auth-client";
 import { useEffect, useState } from "react";
 
 export default function AppointmentsPage() {
     const [appointments, setAppointments] = useState([]);
     const [search, setSearch] = useState("");
     const [loading, setLoading] = useState(true);
+    const [token, setToken] = useState(null);
 
     useEffect(() => {
-        const fetchAppointments = async () => {
-            try {
-                const res = await fetch("http://localhost:4000/appointments");
-                const data = await res.json();
-                setAppointments(data);
-            } catch (err) {
-                console.log(err);
-            } finally {
-                setLoading(false);
-            }
+        const getToken = async () => {
+            const result = await authClient.token();
+            setToken(result.data.token);
         };
 
-        fetchAppointments();
+        getToken();
     }, []);
+    // console.log(token);
+
+    useEffect(() => {
+
+    if (!token) return;
+
+    const fetchAppointments = async () => {
+        try {
+            const res = await fetch(
+                "http://localhost:4000/appointments",
+                {
+                    headers: {
+                        authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
+            const data = await res.json();
+
+            setAppointments(Array.isArray(data) ? data : []);
+
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    fetchAppointments();
+
+}, [token]);
 
     const filteredAppointments = appointments.filter((app) =>
         app.doctorName?.toLowerCase().includes(search.toLowerCase())

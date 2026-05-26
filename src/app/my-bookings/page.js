@@ -23,31 +23,54 @@ const MyBookings = () => {
     const [bookings, setBookings] = useState([]);
     const [loading, setLoading] = useState(true);
     const [confirmId, setConfirmId] = useState(null);
+    const [token, setToken] = useState(null);
+
+    useEffect(() => {
+        const getToken = async () => {
+            const result = await authClient.token();
+            setToken(result.data.token);
+        };
+
+        getToken();
+    }, []);
+
+    // console.log(token, "token");
 
 
     useEffect(() => {
-        if (!userEmail) return;
+    if (!userEmail || !token) return;
 
-        (async () => {
-            try {
-                const res = await fetch(
-                    `http://localhost:4000/my-bookings?email=${userEmail}`
-                );
+    (async () => {
+        try {
+            const res = await fetch(
+                `http://localhost:4000/my-bookings?email=${userEmail}`,
+                {
+                    headers: {
+                        authorization: `Bearer ${token}`,
+                    },
+                }
+            );
 
-                const data = await res.json();
-                setBookings(data);
-            } catch (err) {
-                console.log(err);
-            } finally {
-                setLoading(false);
-            }
-        })();
-    }, [userEmail]);
+            const data = await res.json();
+
+            // console.log(data);
+
+            setBookings(Array.isArray(data) ? data : []);
+        } catch (err) {
+            console.log(err);
+        } finally {
+            setLoading(false);
+        }
+    })();
+}, [userEmail, token]);
 
     const handleDelete = async (id) => {
 
         const res = await fetch(`http://localhost:4000/delete-booking/${id}`, {
             method: "DELETE",
+            headers: {
+                authorization: `Bearer ${token}`
+            }
         });
 
         if (res.ok) {

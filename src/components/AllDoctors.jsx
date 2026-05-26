@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import DoctorCard from "@/components/DoctorCard";
+import { authClient } from "@/lib/auth-client";
 
 export default function AllDoctorsPage() {
   const [doctors, setDoctors] = useState([]);
@@ -10,16 +11,25 @@ export default function AllDoctorsPage() {
 
   useEffect(() => {
     const fetchDoctors = async () => {
-      try {
-        const res = await fetch("http://localhost:4000/doctors");
-        const data = await res.json();
-        setDoctors(data);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+          const {data:token} = await authClient.token();
+          // console.log(token.token);
+          try {
+            const res = await fetch("http://localhost:4000/doctors",
+              {
+              headers:{
+                authorization: `Bearer ${token.token}`
+              }
+            }
+            )
+            
+            const data = await res.json();
+            setDoctors(data);
+          } catch (error) {
+            console.log(error);
+          } finally {
+            setLoading(false);
+          }
+        };
 
     fetchDoctors();
   }, []);

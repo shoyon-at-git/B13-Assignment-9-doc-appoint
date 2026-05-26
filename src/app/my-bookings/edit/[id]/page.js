@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { redirect, useParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
@@ -9,18 +10,38 @@ const Page = () => {
 
     const { id } = useParams();
     const [booking, setBooking] = useState(null);
+    const [token, setToken] = useState(null);
+
     useEffect(() => {
+        const getToken = async () => {
+            const result = await authClient.token();
+            setToken(result.data.token);
+        };
+
+        getToken();
+    }, []);
+    // console.log(token);
+    useEffect(() => {
+        if (!id || !token) return;
+
         const fetchBooking = async () => {
             const res = await fetch(
-                `http://localhost:4000/bookings/${id}`
+                `http://localhost:4000/bookings/${id}`,
+                {
+                    headers: {
+                        authorization: `Bearer ${token}`,
+                    },
+                }
             );
+
             const data = await res.json();
             setBooking(data);
         };
-        fetchBooking();
-    }, [id]);
 
-    const editBooking =async(e)=>{
+        fetchBooking();
+    }, [id, token]);
+
+    const editBooking = async (e) => {
         e.preventDefault();
         const formData = new FormData(e.currentTarget);
         const updatedBooking = Object.fromEntries(formData.entries());
@@ -31,14 +52,23 @@ const Page = () => {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
+                    authorization: `Bearer ${token}`
                 },
                 body: JSON.stringify(updatedBooking),
             }
         );
         const data = await res.json();
         console.log(data);
-        toast.success('Appointment updated successfully');
-        redirect("/my-bookings");
+        if (data.acknowledged && data.modifiedCount > 0) {
+            toast.success("Appointment updated successfully");
+
+            setTimeout(() => {
+                redirect("/my-bookings");
+            }, 1500);
+
+        } else {
+            toast.error("No changes were made");
+        }
     }
 
     if (!booking) {
@@ -159,9 +189,9 @@ const Page = () => {
 
                 <div className="flex justify-end gap-3">
                     <Link href={"/my-bookings"}>
-                    <button className="px-4 py-2 cursor-pointer bg-gray-300 rounded-md hover:bg-gray-400">
-                        Cancel
-                    </button>
+                        <button className="px-4 py-2 cursor-pointer bg-gray-300 rounded-md hover:bg-gray-400">
+                            Cancel
+                        </button>
                     </Link>
 
                     <button type="submit" className="px-4 py-2 cursor-pointer bg-green-500 text-white rounded-md hover:bg-green-600">
