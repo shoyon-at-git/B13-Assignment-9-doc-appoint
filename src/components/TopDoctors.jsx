@@ -14,16 +14,10 @@ export default function TopDoctors() {
       const {data:token} = await authClient.token();
       // console.log(token.token);
       try {
-        const res = await fetch("http://localhost:4000/doctors",
-          {
-          headers:{
-            authorization: `Bearer ${token.token}`
-          }
-        }
-        )
+        const res = await fetch("http://localhost:4000/top-doctors")
         
         const data = await res.json();
-        setDoctors(data.slice(0, 3));
+        setDoctors(data);
       } catch (error) {
         console.log(error);
       } finally {
