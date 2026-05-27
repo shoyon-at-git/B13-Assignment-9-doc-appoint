@@ -31,13 +31,13 @@ export const metadata = {
   authors: [{ name: "MD. Sanowar Hossain Shoyon" }],
   creator: "MD. Sanowar Hossain Shoyon",
 
-  metadataBase: new URL("https://doc-appoint-shoyon-at.vercel.app"),
+  metadataBase: new URL("https://doc-appoint-shoyon-at-git.vercel.app/"),
 
   openGraph: {
     title: "DocAppoint",
     description:
       "Book appointments with trusted doctors easily using DocAppoint.",
-    url: "https://doc-appoint-shoyon-at.vercel.app",
+    url: "https://doc-appoint-shoyon-at-git.vercel.app/",
     siteName: "DocAppoint",
     images: [
       {

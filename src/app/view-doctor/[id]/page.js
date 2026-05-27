@@ -1,3 +1,36 @@
+export async function generateMetadata({ params }) {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_SERVER_URL}/view-doctor/${params.id}`,
+    { cache: "no-store" }
+  );
+
+  if (!res.ok) {
+    return {
+      title: "Doctor Details",
+      description: "View doctor profile and book appointment",
+    };
+  }
+
+  const doctor = await res.json();
+
+  return {
+    title: `${doctor.name} | ${doctor.specialty} | Book Appointment`,
+    description: `Book appointment with ${doctor.name}, ${doctor.specialty}. Consultation fee ৳${doctor.fee}. Available at ${doctor.hospital}.`,
+    openGraph: {
+      title: `${doctor.name} - Specialist Doctor`,
+      description: doctor.description,
+      images: [{ url: doctor.image }],
+      type: "article",
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${doctor.name} | Book Appointment`,
+      description: doctor.specialty,
+      images: [doctor.image],
+    },
+  };
+}
+
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Image from "next/image";
