@@ -26,7 +26,7 @@ const Page = () => {
 
         const fetchBooking = async () => {
             const res = await fetch(
-                `http://localhost:4000/bookings/${id}`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/bookings/${id}`,
                 {
                     headers: {
                         authorization: `Bearer ${token}`,
@@ -47,7 +47,7 @@ const Page = () => {
         const updatedBooking = Object.fromEntries(formData.entries());
         // console.log(updatedBooking);
         const res = await fetch(
-            `http://localhost:4000/edit-booking/${id}`,
+            `${process.env.NEXT_PUBLIC_SERVER_URL}/edit-booking/${id}`,
             {
                 method: "PATCH",
                 headers: {

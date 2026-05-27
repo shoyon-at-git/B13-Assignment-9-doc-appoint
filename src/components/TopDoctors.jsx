@@ -14,7 +14,7 @@ export default function TopDoctors() {
       const {data:token} = await authClient.token();
       // console.log(token.token);
       try {
-        const res = await fetch("http://localhost:4000/top-doctors")
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/top-doctors`)
         
         const data = await res.json();
         setDoctors(data);

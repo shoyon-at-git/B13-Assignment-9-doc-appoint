@@ -43,7 +43,7 @@ const MyBookings = () => {
     (async () => {
         try {
             const res = await fetch(
-                `http://localhost:4000/my-bookings?email=${userEmail}`,
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/my-bookings?email=${userEmail}`,
                 {
                     headers: {
                         authorization: `Bearer ${token}`,
@@ -66,7 +66,7 @@ const MyBookings = () => {
 
     const handleDelete = async (id) => {
 
-        const res = await fetch(`http://localhost:4000/delete-booking/${id}`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/delete-booking/${id}`, {
             method: "DELETE",
             headers: {
                 authorization: `Bearer ${token}`

@@ -44,7 +44,7 @@ const AddBookingForm = ({ doctor }) => {
             userEmail: session?.user?.email,
         };
         console.log(bookingInfo, "booking");
-        const res = await fetch("http://localhost:4000/add-booking", {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/add-booking`, {
             method: "POST",
             headers: {
                 "content-type": "application/json",

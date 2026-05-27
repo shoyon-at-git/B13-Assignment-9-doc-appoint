@@ -27,7 +27,7 @@ export default function AppointmentsPage() {
     const fetchAppointments = async () => {
         try {
             const res = await fetch(
-                "http://localhost:4000/appointments",
+                `${process.env.NEXT_PUBLIC_SERVER_URL}/appointments`,
                 {
                     headers: {
                         authorization: `Bearer ${token}`,

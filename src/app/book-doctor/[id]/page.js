@@ -11,7 +11,7 @@ const AddDoctorBookingPage = async ({ params }) => {
     })
 
     // Fetch doctor data
-    const res = await fetch(`http://localhost:4000/view-doctor/${id}`, {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/view-doctor/${id}`, {
         cache: "no-store",
         headers:{
             authorization: `Bearer ${token}`

@@ -14,7 +14,7 @@ export default function AllDoctorsPage() {
           const {data:token} = await authClient.token();
           // console.log(token.token);
           try {
-            const res = await fetch("http://localhost:4000/doctors",
+            const res = await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/doctors`,
               {
               headers:{
                 authorization: `Bearer ${token.token}`
